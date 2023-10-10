@@ -13,7 +13,7 @@ public:
     publisher_ = this->create_publisher<rosgraph_msgs::msg::Clock>("/clock", 10);
 
     int timer_nanoseconds = int(((1.0 / clock_frequency) / real_time_factor) * std::pow(10, 9));
-    start = this->get_clock()->now();
+    // start = this->get_clock()->now();
 
     timer_ = this->create_wall_timer(std::chrono::nanoseconds(timer_nanoseconds),
                                      std::bind(&ClockPublisher::timer_callback, this));
@@ -28,7 +28,8 @@ private:
   void timer_callback()
   {
     auto clock_msg = rosgraph_msgs::msg::Clock();
-    auto current_time = (this->get_clock()->now() - start)*real_time_factor;
+    // auto current_time = (this->get_clock()->now() - start)*real_time_factor;
+    auto current_time = this->get_clock()->now();
     clock_msg.clock.set__sec(std::floor(current_time.seconds()));
     clock_msg.clock.set__nanosec((current_time.seconds()-std::floor(current_time.seconds()))*std::pow(10, 9));
     publisher_->publish(clock_msg);
